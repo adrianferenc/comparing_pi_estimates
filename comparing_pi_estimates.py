@@ -16,11 +16,6 @@ def basel(n):
     basel_sum = sum([1/i**2 for i in range(1,n+1)])
     return math.sqrt(6*basel_sum)
 
-#This computes the Riemann sum of 1/sqrt(1-x^2), the derivative of arcsin(x) from 0 to 1 using n rectangles and left endpoints. The integral produces the value pi/2.
-def riemann(n):
-    riemann_sum = sum([(1/math.sqrt(1-(i/n)**2))*(1/n) for i in range(n)])
-    return 2*riemann_sum
-
 #This computes the trapezoidal sum of sqrt(1-x^2), the formula for the top half of the unit circle from 0 to 1 using n trapezoids. The integral produces the value pi/4.
 def trapezoid(n):
     sum = 0
@@ -36,22 +31,10 @@ def leibniz(n):
     leibniz_sum = sum([(-1)**(n+1)/(2*n-1) for n in range (1,n+1)])
     return 4*leibniz_sum
 
-
-
 #This computes the partial sum of 3 + 4(-1)^(n+1)/((2n)(2n+1)(2n+2)) which evaluates to pi.
 def nilakantha(n):
     nilakantha_sum = sum([4*(-1)**(n+1)/((2*n)*(2*n+1)*(2*n+2)) for n in range(1,n+1)])
     return 3+nilakantha_sum
-
-#This uses the monte carlo method with n points in a 2x2 square that circumscribes a circle with radius 1.
-def monte_carlo(n):
-    yeses = 0
-    for i in range(n):
-        x = random.uniform(-1, 1)
-        y = random.uniform(-1, 1)
-        if math.sqrt(x**2+y**2)<1:
-            yeses+=1
-    return 4*yeses/n
 
 #This uses Borwein's algorithm to recursively find pi. The value of borwein_p(n) converges to pi:
 bor_a = dict()
@@ -88,18 +71,27 @@ def borwein_p(n):
             borwein_p(n-1)
     return bor_p[n]
 
+#This uses the monte carlo method with n points in a 2x2 square that circumscribes a circle with radius 1.
+def monte_carlo(n):
+    yeses = 0
+    for i in range(n):
+        x = random.uniform(-1, 1)
+        y = random.uniform(-1, 1)
+        if math.sqrt(x**2+y**2)<1:
+            yeses+=1
+    return 4*yeses/n
+
+#This computes the Riemann sum of 1/sqrt(1-x^2), the derivative of arcsin(x) from 0 to 1 using n rectangles and left endpoints. The integral produces the value pi/2.
+def riemann(n):
+    riemann_sum = sum([(1/math.sqrt(1-(i/n)**2))*(1/n) for i in range(n)])
+    return 2*riemann_sum
+
 
 def basel_count(epsilon):
     basel_counter = 1
     while abs(basel(basel_counter)-math.pi)>=epsilon:
         basel_counter+=1
     return basel_counter
-
-def riemann_count(epsilon):
-    riemann_counter = 1
-    while abs(riemann(riemann_counter)-math.pi)>=epsilon:
-        riemann_counter +=1
-    return riemann_counter
 
 def trapezoid_count(epsilon):
     trapezoid_counter = 1
@@ -133,6 +125,12 @@ def monte_count(epsilon):
             carlo_count+=1
         monte_list.append(carlo_count)
     return numpy.median(monte_list)
+
+def riemann_count(epsilon):
+    riemann_counter = 1
+    while abs(riemann(riemann_counter)-math.pi)>=epsilon:
+        riemann_counter +=1
+    return riemann_counter
 
 def steps_to_epsilon(epsilon):
     print('To get your estimate within epsilon = ' + str(epsilon) + ' of π, it takes')
@@ -180,6 +178,7 @@ leibniz_list = [leibniz(point) for point in x2]
 nilakantha_list = [nilakantha(point) for point in x2]
 borwein_list = [borwein_p(point) for point in x2]
 monte_list = [monte_carlo(point) for point in x2]
+riemann_list = [riemann(point) for point in x2]
 
 plt.plot(x2,[math.pi]*len(x2), c='black')    
 plt.scatter(x2, basel_list, s=5)
@@ -188,9 +187,10 @@ plt.scatter(x2, leibniz_list, s=5)
 plt.scatter(x2, nilakantha_list, s=5)
 plt.scatter(x2, borwein_list, s=5)
 plt.scatter(x2, monte_list, s=5)
+plt.scatter(x2, riemann_list, s=5)
 plt.xlabel('n')
 plt.ylabel('Value')
 plt.title('The value of each function for each value of n')
-plt.legend(['y=π', 'Basel', 'Trapezoidal', 'Leibniz', 'Nilakantha', 'Borwein', 'Monte Carlo'])
+plt.legend(['y=π', 'Basel', 'Trapezoidal', 'Leibniz', 'Nilakantha', 'Borwein', 'Monte Carlo', 'Riemann'])
 plt.savefig('Convergence to pi.png', dpi=500)
 
