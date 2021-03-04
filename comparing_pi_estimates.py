@@ -154,7 +154,7 @@ borwein_count_list = [borwein_count(1/point) for point in x]
 monte_count_list = [monte_count(1/point) for point in x]
 
 
-plt.plot(x,x)    
+plt.plot(x,x, c='black')    
 plt.scatter(x, basel_count_list, s=5)
 plt.scatter(x, trapezoid_count_list, s=5)
 plt.scatter(x, leibniz_count_list, s=5)
