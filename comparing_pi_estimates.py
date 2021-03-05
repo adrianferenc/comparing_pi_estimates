@@ -126,6 +126,15 @@ def monte_count(epsilon):
         monte_list.append(carlo_count)
     return numpy.median(monte_list)
 
+def monte_count_k(epsilon,k):
+    monte_list = []
+    for n in range(k):
+        carlo_count = 1
+        while abs(monte_carlo(carlo_count)-math.pi)>=epsilon:
+            carlo_count+=1
+        monte_list.append(carlo_count)
+    return numpy.median(monte_list)
+
 def riemann_count(epsilon):
     riemann_counter = 1
     while abs(riemann(riemann_counter)-math.pi)>=epsilon:
@@ -152,6 +161,7 @@ leibniz_count_list = [leibniz_count(1/point) for point in x]
 nilakantha_count_list = [nilakantha_count(1/point) for point in x]
 borwein_count_list = [borwein_count(1/point) for point in x]
 monte_count_list = [monte_count(1/point) for point in x]
+
 
 
 plt.plot(x,x, c='black')    
@@ -194,3 +204,28 @@ plt.title('The value of each function for each value of n')
 plt.legend(['y=π', 'Basel', 'Trapezoidal', 'Leibniz', 'Nilakantha', 'Borwein', 'Monte Carlo', 'Riemann'])
 plt.savefig('Convergence to pi.png', dpi=500)
 
+
+plt.close()
+
+
+monte_count_list_1 = [monte_count_k(1/point,1) for point in x]
+monte_count_list_10 = [monte_count_k(1/point,10) for point in x]
+monte_count_list_50 = [monte_count_k(1/point,50) for point in x]
+monte_count_list_100 = [monte_count_k(1/point,100) for point in x]
+monte_count_list_200 = [monte_count_k(1/point,200) for point in x]
+monte_count_list_500 = [monte_count_k(1/point,500) for point in x]
+monte_count_list_1000 = [monte_count_k(1/point,1000) for point in x]
+
+plt.scatter(x, monte_count_list_1, s=11)
+plt.scatter(x, monte_count_list_10, s=10)
+plt.scatter(x, monte_count_list_50, s=9)
+plt.scatter(x, monte_count_list_100, s=8)
+plt.scatter(x, monte_count_list_200, s=7)
+plt.scatter(x, monte_count_list_500, s=6)
+plt.scatter(x, monte_count_list_1000, s=5)
+
+plt.xlabel('1/ε')
+plt.ylabel('Steps')
+plt.title('Estimating pi within epsilon  by the Monte Carlo Method \nby finding the \nmedian after running it k times')
+plt.legend(['k=1','k=10','k=50', 'k=100','k=200','k=500','k=1000'])
+plt.savefig('Monte Carlo with variable k trials.png', dpi=500)
